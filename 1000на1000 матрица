@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <random>
+#include <chrono>
+
+using namespace std;
+
+const int N = 1000;
+const int NUM_ITERATIONS = 1000;
+
+// Функция для заполнения матрицы случайными числами
+void fillMatrix(vector<vector<int>>& matrix) {
+    static random_device rd;
+    static mt19937 gen(rd());
+    static uniform_int_distribution<> dis(0, 10);
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            matrix[i][j] = dis(gen);
+        }
+    }
+}
+
+// Функция для умножения двух матриц
+void multiplyMatrices(const vector<vector<int>>& A, const vector<vector<int>>& B, vector<vector<int>>& C) {
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            long long sum = 0;
+            for (int k = 0; k < N; ++k) {
+                sum += static_cast<long long>(A[i][k]) * B[k][j];
+            }
+            C[i][j] = static_cast<int>(sum);
+        }
+    }
+}
+
+int main() {
+    // Создаем и заполняем матрицы
+    vector<vector<int>> A(N, vector<int>(N));
+    vector<vector<int>> B(N, vector<int>(N));
+    
+    fillMatrix(A);
+    fillMatrix(B);
+
+    double total_time = 0.0;
+
+    // Выполняем умножение 1000 раз и считаем среднее время
+    for (int i = 0; i < NUM_ITERATIONS; ++i) {
+        vector<vector<int>> C(N, vector<int>(N));
+        auto start_time = chrono::high_resolution_clock::now();
+
+        multiplyMatrices(A, B, C);
+
+        auto end_time = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end_time - start_time;
+        total_time += elapsed.count();
+    }
+
+    cout << "Среднее время одного умножения за " << NUM_ITERATIONS << " итераций: "
+         << total_time / NUM_ITERATIONS << " секунд" << endl;
+
+    return 0;
+}
