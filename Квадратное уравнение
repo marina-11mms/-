@@ -1,0 +1,66 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <stdio.h>
+#include "Node.h"
+
+using namespace std;
+
+
+int main() {
+	setlocale(LC_ALL, "rus");
+
+	double a, b, c;
+
+	printf("\nзначение a: ");
+	scanf_s("%lf", &a);
+	printf("\nзначение b: ");
+	scanf_s("%lf", &b);
+	printf("\nзначение c: ");
+	scanf_s("%lf", &c);
+
+	Node node(a, b, c);
+
+	node.solve();
+
+	return 0;
+}
+
+Node.h
+#pragma once
+#include <iostream>
+#include <stdio.h>
+#include <cmath>
+
+
+class Node
+{
+private:
+	double a, b, c;
+	double x;
+
+public:
+
+	Node(double a, double b, double c) {
+		this->a = a;
+		this->b = b;
+		this->c = c;
+	}
+
+	void solve() {
+		double D = (b * b) - 4 * (a * c);
+		double sqD = sqrt(D);
+		if (D < 0) {
+			printf("Нет корней\n");
+		}
+		else if (D == 0) {
+			x = -b / (2 * a);
+			printf("Один корень: x = %.2f\n", x);
+		}
+		else {
+			double x1 = (-b + sqD) / (2 * a);
+			double x2 = (-b - sqD) / (2 * a);
+			printf("Корни уравнения: x1 = %.2f, x2 = %.2f\n", x1, x2);
+		}
+	}
+};
+
