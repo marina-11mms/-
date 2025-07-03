@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+
+class Student {
+public:
+    std::string name;
+    std::string group;
+    std::string faculty;
+
+    Student(const std::string& name, const std::string& group, const std::string& faculty)
+        : name(name), group(group), faculty(faculty) {}
+
+    void display() const {
+        std::cout << "Имя: " << name << ", Группа: " << group << ", Факультет: " << faculty << std::endl;
+    }
+};
+
+void loadStudentsFromFile(const std::string& filename, std::vector<Student>& students) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Не удалось открыть файл: " << filename << std::endl;
+        return;
+    }
+
+    std::string name, group, faculty;
+    while (std::getline(file, name) && std::getline(file, group) && std::getline(file, faculty)) {
+        students.emplace_back(name, group, faculty);
+    }
+
+    file.close();
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    std::vector<Student> students;
+    char choice;
+
+    loadStudentsFromFile("students.csv", students);
+
+    do {
+        std::string name, group, faculty;
+
+        std::cout << "Введите имя студента: ";
+        std::getline(std::cin, name);
+        std::cout << "Введите группу студента: ";
+        std::getline(std::cin, group);
+        std::cout << "Введите факультет студента: ";
+        std::getline(std::cin, faculty);
+
+        students.emplace_back(name, group, faculty);
+
+        std::cout << "Хотите добавить еще одного студента? (y/n): ";
+        std::cin >> choice;
+        std::cin.ignore();
+
+    } while (choice == 'y' || choice == 'Y');
+
+    std::cout << "\nИнформация о студентах:" << std::endl;
+    for (const auto& student : students) {
+        student.display();
+    }
+
+    std::cout << "\nНажмите любую клавишу для выхода..." << std::endl;
+    std::cin.get();
+    return 0;
+}
