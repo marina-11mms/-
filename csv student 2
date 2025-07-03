@@ -1,0 +1,14 @@
+#include "student.h"
+#include <iostream>
+
+Student::Student(std::string& lastName, std::string& firstName,
+    std::string& middleName, int age, std::string& gender)
+    : lastName(lastName), firstName(firstName), middleName(middleName), age(age), gender(gender) {}
+
+void Student::display() const {
+    std::cout << "Фамилия: " << lastName
+        << ", Имя: " << firstName
+        << ", Отчество: " << middleName
+        << ", Возраст: " << age
+        << ", Пол: " << gender << std::endl;
+}
