@@ -1,0 +1,52 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include "student.h"
+
+
+void readStudentsFromCSV(const std::string& filename, std::vector<Student*>& students) {
+    std::ifstream file(filename);
+    std::string line;
+
+    if (!file.is_open()) {
+        std::cerr << "Не удалось открыть файл: " << filename << std::endl;
+        return;
+    }
+
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string lastName, firstName, middleName, gender;
+        std::string age;
+
+
+        std::getline(ss, lastName, ',');
+        std::getline(ss, firstName, ',');
+        std::getline(ss, middleName, ',');
+        std::getline(ss, age, ',');
+        std::getline(ss, gender);
+        int a = stoi(age);
+        students.emplace_back(new Student(lastName, firstName, middleName, a, gender));
+    }
+
+    file.close();
+}
+
+int main(int argc, char* argv[]) {
+    setlocale(LC_ALL, "Russian");
+    if (argc != 2) {
+        std::cerr << "Использование: " << argv[0] << " <students.csv>" << std::endl;
+        return 1;
+    }
+
+    std::vector<Student*> students;
+    readStudentsFromCSV(argv[1], students);
+
+
+    for (const auto& student : students) {
+        student->display();
+    }
+
+    return 0;
+}
